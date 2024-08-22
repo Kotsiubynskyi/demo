@@ -23,7 +23,7 @@ public class RatingRestController {
 
     @GetMapping("/rating2")
     public String getRating() {
-        return "sdf";
+        return "654asda46s5d_AS d--a s-d -as";
     }
 
 }
