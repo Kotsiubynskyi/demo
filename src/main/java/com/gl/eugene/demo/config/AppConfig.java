@@ -1,14 +1,15 @@
 package com.gl.eugene.demo.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.modelmapper.ModelMapper;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import com.gl.eugene.demo.service.RatingService;
 
 @Configuration
 public class AppConfig {
 
-    @Autowired
-    public RatingService ratingService;
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
+    }
 
 }

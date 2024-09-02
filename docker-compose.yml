@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  mongo:
+    image: mongo:7.0.14
+    container_name: mongo_db
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: eugene
+      MONGO_INITDB_ROOT_PASSWORD: eugene
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:

@@ -6,8 +6,8 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.3.2</version>
-		<relativePath /> <!-- lookup parent from repository -->
+		<version>3.3.3</version>
+		<relativePath />
 	</parent>
 	<groupId>com.gl.eugene</groupId>
 	<artifactId>demo</artifactId>
@@ -66,6 +66,14 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency> -->
+
+
+		<dependency>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>3.2.1</version>
+		</dependency>
+		
 	</dependencies>
 
 	<build>

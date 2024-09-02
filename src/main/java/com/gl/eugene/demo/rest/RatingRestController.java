@@ -1,29 +1,52 @@
 package com.gl.eugene.demo.rest;
 
+import java.util.Optional;
+
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gl.eugene.demo.jpa.entity.Rating;
+import com.gl.eugene.demo.exception.ResourceNotFoundException;
 import com.gl.eugene.demo.model.Grade;
+import com.gl.eugene.demo.model.Rating;
+import com.gl.eugene.demo.service.RatingService;
 
 @RestController
 @RequestMapping("/")
-public class RatingRestController {
+public class RatingRestController implements InitializingBean {
+
+    @Autowired
+    private RatingService ratingService;
+
+    
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        Rating rating = sampleRating();
+        ratingService.saveRating(rating);
+    }
+
 
     @GetMapping("/rating")
-    public Rating getRating(String playerId) {
+    public ResponseEntity<Rating> getRating(String playerId) {
+        Optional<Rating> rating = ratingService.geRating(playerId);
+        if (rating.isPresent()) {
+            return new ResponseEntity<Rating>(rating.get(), HttpStatus.OK);
+        } else {
+            throw new ResourceNotFoundException("Not found rating for player id: " + playerId);
+        }
+    }
+
+    private Rating sampleRating() {
         Rating rating = new Rating();
         rating.setId("1");
         rating.setGrade(Grade.GRAND_MASTER);
         rating.setTotalGames(1100);
         rating.setWonGames(1000);
         return rating;
-    }
-
-    @GetMapping("/rating2")
-    public String getRating() {
-        return "654asda46s5d_AS d--a s-d -as";
     }
 
 }
