@@ -7,14 +7,11 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.security.core.GrantedAuthority;
 
-import jakarta.persistence.ManyToMany;
-
 public class Role implements GrantedAuthority {
 
     @Id
     private String id;
 
-    @ManyToMany
     private final List<Permission> permissions = new ArrayList();
 
     @Override

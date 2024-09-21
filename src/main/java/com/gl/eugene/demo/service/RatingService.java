@@ -2,35 +2,54 @@ package com.gl.eugene.demo.service;
 
 import java.util.Optional;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gl.eugene.demo.jpa.entity.RatingEntity;
 import com.gl.eugene.demo.jpa.repository.RatingRepository;
 import com.gl.eugene.demo.model.Rating;
+import com.gl.eugene.demo.rest.exception.RestEntityNotFoundException;
 
 @Service
-public class RatingService {
+public class RatingService implements RatingServiceIfc {
 
-    @Autowired
     private RatingRepository ratingRepository;
+    private ObjectMapper modelMapper;
 
-    @Autowired
-    private ModelMapper modelMapper;
-
-    public Optional<Rating> geRating(String playerId) {
-        Optional<com.gl.eugene.demo.jpa.entity.Rating> ratingEntity = ratingRepository.findById(playerId);
-        return ratingEntity.map(entity -> modelMapper.map(entity, Rating.class));
+    public RatingService(RatingRepository ratingRepository, ObjectMapper modelMapper) {
+        this.ratingRepository = ratingRepository;
+        this.modelMapper = modelMapper;
     }
 
-    public void saveRating(Rating rating) {
+    @Override
+    public Rating createRating(Rating newRating) {
+        return null;
+    }
+
+    @Override
+    public Optional<Rating> geRating(String playerId) {
+        Optional<RatingEntity> ratingEntity = ratingRepository.findById(playerId);
+        return ratingEntity.map(entity -> modelMapper.convertValue(entity, Rating.class));
+    }
+
+    @Override
+    public Optional<Rating> updateRating(Rating rating) {
         if (rating == null) {
-            return;
+            return Optional.empty();
         }
 
-        com.gl.eugene.demo.jpa.entity.Rating ratingEntity = modelMapper.map(rating,
-                com.gl.eugene.demo.jpa.entity.Rating.class);
-        ratingRepository.save(ratingEntity);
+        Optional<RatingEntity> ratingEntity = ratingRepository.findById(rating.getId());
+        if (ratingEntity.isEmpty()) {
+            throw new RestEntityNotFoundException();
+        }
+
+        RatingEntity ratingToUpdate = ratingEntity.get();
+        ratingToUpdate.setGrade(rating.getGrade());
+        ratingToUpdate.setTotalGames(rating.getTotalGames());
+        ratingToUpdate.setWonGames(rating.getWonGames());
+        ratingRepository.save(ratingToUpdate);
+
+        return Optional.of(modelMapper.convertValue(ratingToUpdate, Rating.class));
 
     }
 

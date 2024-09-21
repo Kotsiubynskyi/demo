@@ -1,6 +1,8 @@
 package com.gl.eugene.demo.rest.dto;
 
-public class Rating {
+import com.gl.eugene.demo.model.Grade;
+
+public class RatingDto {
 
     private String id;
     private int totalGames;
@@ -58,7 +60,7 @@ public class Rating {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Rating other = (Rating) obj;
+        RatingDto other = (RatingDto) obj;
         if (id == null) {
             if (other.id != null)
                 return false;

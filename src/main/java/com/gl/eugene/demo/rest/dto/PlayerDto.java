@@ -1,18 +1,12 @@
-package com.gl.eugene.demo.jpa.entity;
+package com.gl.eugene.demo.rest.dto;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+public class PlayerDto {
 
-@Document("player")
-public class Player {
-
-    @Id
     private String id;
     private String name;
     private int age;
     private String country;
-
-    private Rating rating;
+    private RatingDto rating;
 
     public String getId() {
         return id;
@@ -46,11 +40,11 @@ public class Player {
         this.country = country;
     }
 
-    public Rating getRating() {
+    public RatingDto getRating() {
         return rating;
     }
 
-    public void setRating(Rating rating) {
+    public void setRating(RatingDto rating) {
         this.rating = rating;
     }
 
@@ -74,7 +68,7 @@ public class Player {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Player other = (Player) obj;
+        PlayerDto other = (PlayerDto) obj;
         if (id == null) {
             if (other.id != null)
                 return false;

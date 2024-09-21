@@ -1,10 +1,10 @@
 package com.gl.eugene.demo.security;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
-import jakarta.persistence.Entity;
 
-@Entity
+@Document
 public class Permission implements GrantedAuthority {
 
     @Id

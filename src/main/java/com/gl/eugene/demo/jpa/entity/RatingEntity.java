@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.gl.eugene.demo.model.Grade;
 
 @Document("rating")
-public class Rating {
+public class RatingEntity {
 
     @Id
     private String id;
@@ -66,7 +66,7 @@ public class Rating {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Rating other = (Rating) obj;
+        RatingEntity other = (RatingEntity) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
