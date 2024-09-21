@@ -3,7 +3,6 @@ package com.gl.eugene.demo.rest;
 import java.util.Optional;
 
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,22 +10,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gl.eugene.demo.exception.ResourceNotFoundException;
-import com.gl.eugene.demo.model.Grade;
-import com.gl.eugene.demo.model.Rating;
+import com.gl.eugene.demo.rest.dto.Grade;
+import com.gl.eugene.demo.rest.dto.Rating;
 import com.gl.eugene.demo.service.RatingService;
 
 @RestController
 @RequestMapping("/")
-public class RatingRestController implements InitializingBean {
+public class RatingRestController {
+   
+    public RatingService ratingService;
+    public ObjectMapper objectMapper;
 
-    @Autowired
-    private RatingService ratingService;
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        Rating rating = sampleRating();
-        ratingService.saveRating(rating);
+    public RatingRestController(RatingService ratingService, ObjectMapper objectMapper) {
+        this.ratingService = ratingService;
+        this.objectMapper = objectMapper;
     }
 
     @GetMapping("/test")
@@ -36,9 +35,11 @@ public class RatingRestController implements InitializingBean {
 
     @GetMapping("/rating")
     public ResponseEntity<Rating> getRating(String playerId) {
-        Optional<Rating> rating = ratingService.geRating(playerId);
-        if (rating.isPresent()) {
-            return new ResponseEntity<Rating>(rating.get(), HttpStatus.OK);
+        Optional<Rating> ratingOptional = ratingService.geRating(playerId);
+        if (ratingOptional.isPresent()) {
+            Rating rating = ratingOptional.get();
+            Rating restRating = objectMapper
+            return new ResponseEntity<Rating>(rating, HttpStatus.OK);
         } else {
             throw new ResourceNotFoundException("Not found rating for player id: " + playerId);
         }

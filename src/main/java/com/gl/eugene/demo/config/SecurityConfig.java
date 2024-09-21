@@ -1,5 +1,9 @@
 package com.gl.eugene.demo.config;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Stream;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -12,15 +16,13 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.*;
-
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
+
+    
   
     @Bean
     SecurityFilterChain resourceServerSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -30,6 +32,7 @@ public class SecurityConfig {
             requests.requestMatchers("/test").permitAll()
             .requestMatchers("/rating").hasAnyRole("PLAYER", "MANAGER")
             .requestMatchers("/update").hasAnyRole("MANAGER")
+            .requestMatchers("/**").hasAnyRole("ADMIN")
             .anyRequest().authenticated();
         });
 

@@ -1,16 +1,8 @@
-package com.gl.eugene.demo.jpa.entity;
+package com.gl.eugene.demo.rest.dto;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import com.gl.eugene.demo.model.Grade;
-
-@Document("rating")
 public class Rating {
 
-    @Id
     private String id;
-
     private int totalGames;
     private int wonGames;
     private Grade grade;

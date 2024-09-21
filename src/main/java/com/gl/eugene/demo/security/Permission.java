@@ -2,7 +2,6 @@ package com.gl.eugene.demo.security;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.security.core.GrantedAuthority;
-
 import jakarta.persistence.Entity;
 
 @Entity
