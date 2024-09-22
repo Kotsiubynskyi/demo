@@ -6,7 +6,7 @@ import com.gl.eugene.demo.model.Rating;
 
 public interface RatingServiceIfc {
 
-    Rating createRating(Rating newRating);
+    void createRating(Rating newRating);
 
     Optional<Rating> geRating(String playerId);
 

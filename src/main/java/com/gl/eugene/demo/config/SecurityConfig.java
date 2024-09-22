@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,21 +20,25 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@Profile("prod")
 public class SecurityConfig {
 
     @Bean
     SecurityFilterChain resourceServerSecurityFilterChain(HttpSecurity http) throws Exception {
         http.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
-
         http.authorizeHttpRequests(requests -> {
-            requests.requestMatchers("/test").permitAll().requestMatchers("/rating").hasAnyRole("PLAYER", "MANAGER")
-                    .requestMatchers("/update").hasAnyRole("MANAGER").requestMatchers("/**").hasAnyRole("ADMIN")
-                    .anyRequest().authenticated();
+            requests
+            .requestMatchers("/healthcheck").permitAll()
+            .requestMatchers("/rating").hasAnyRole("PLAYER", "MANAGER")
+            .requestMatchers("/update").hasAnyRole("MANAGER")
+            .requestMatchers("/create").hasAnyRole("MANAGER")
+            .anyRequest().authenticated()
+            ;
         });
 
         return http.build();
     }
-
+    
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();

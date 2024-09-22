@@ -2,7 +2,7 @@ package com.gl.eugene.demo.rest.service;
 
 import java.util.Optional;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gl.eugene.demo.model.Rating;
@@ -10,7 +10,7 @@ import com.gl.eugene.demo.rest.dto.RatingDto;
 import com.gl.eugene.demo.rest.exception.RestEntityNotFoundException;
 import com.gl.eugene.demo.service.RatingService;
 
-@Component
+@Service
 public class RatingRestService implements RatingRestServiceIfc {
 
     private RatingService ratingService;
@@ -22,10 +22,9 @@ public class RatingRestService implements RatingRestServiceIfc {
     }
 
     @Override
-    public RatingDto createRating(RatingDto newRatingDto) {
+    public void createRating(RatingDto newRatingDto) {
         Rating newRating = mapper.convertValue(newRatingDto, Rating.class);
-        Rating rating = ratingService.createRating(newRating);
-        return mapper.convertValue(rating, RatingDto.class);
+        ratingService.createRating(newRating);
     }
 
     @Override

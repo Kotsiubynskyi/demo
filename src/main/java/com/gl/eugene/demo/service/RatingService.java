@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gl.eugene.demo.jpa.entity.RatingEntity;
 import com.gl.eugene.demo.jpa.repository.RatingRepository;
 import com.gl.eugene.demo.model.Rating;
-import com.gl.eugene.demo.rest.exception.RestEntityNotFoundException;
 
 @Service
 public class RatingService implements RatingServiceIfc {
@@ -22,8 +21,14 @@ public class RatingService implements RatingServiceIfc {
     }
 
     @Override
-    public Rating createRating(Rating newRating) {
-        return null;
+    public void createRating(Rating newRating) {
+        RatingEntity ratingEntity = new RatingEntity();
+
+        ratingEntity.setId(newRating.getId());
+        ratingEntity.setGrade(newRating.getGrade());
+        ratingEntity.setTotalGames(newRating.getTotalGames());
+        ratingEntity.setWonGames(newRating.getWonGames());
+        ratingRepository.save(ratingEntity);
     }
 
     @Override
@@ -39,11 +44,14 @@ public class RatingService implements RatingServiceIfc {
         }
 
         Optional<RatingEntity> ratingEntity = ratingRepository.findById(rating.getId());
-        if (ratingEntity.isEmpty()) {
-            throw new RestEntityNotFoundException();
+        RatingEntity ratingToUpdate;
+        if (ratingEntity.isPresent()) {
+            ratingToUpdate = ratingEntity.get();
+        } else {
+            ratingToUpdate = new RatingEntity();
         }
 
-        RatingEntity ratingToUpdate = ratingEntity.get();
+        ratingToUpdate.setId(rating.getId());
         ratingToUpdate.setGrade(rating.getGrade());
         ratingToUpdate.setTotalGames(rating.getTotalGames());
         ratingToUpdate.setWonGames(rating.getWonGames());

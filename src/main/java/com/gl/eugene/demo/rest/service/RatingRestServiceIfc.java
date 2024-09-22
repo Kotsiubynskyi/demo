@@ -7,7 +7,7 @@ import com.gl.eugene.demo.rest.exception.RestEntityNotFoundException;
 
 public interface RatingRestServiceIfc {
 
-    RatingDto createRating(RatingDto newRating);
+    void createRating(RatingDto newRating);
 
     Optional<RatingDto> getRating(String playerId) throws RestEntityNotFoundException;
 

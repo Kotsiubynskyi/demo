@@ -4,10 +4,13 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,13 +29,20 @@ public class RatingRestController {
         this.objectMapper = objectMapper;
     }
 
+    @GetMapping("/healthcheck")
+    public ResponseEntity<String> healthcheck() {
+        return new ResponseEntity<String>("OK", HttpStatus.OK);
+    }
+
     @GetMapping("/rating")
-    public ResponseEntity<RatingDto> getRating(String playerId) {
+    @PreAuthorize("hasAnyRole('PLAYER', 'MANAGER')")
+    public ResponseEntity<RatingDto> getRating(@RequestParam String playerId) {
         Optional<RatingDto> ratingOptional = ratingService.getRating(playerId);
         return new ResponseEntity<RatingDto>(ratingOptional.get(), HttpStatus.OK);
     }
 
-    @PostMapping("/update")
+    @PutMapping("/update")
+    @PreAuthorize("hasAnyRole('PLAYER', 'MANAGER')")
     public ResponseEntity<RatingDto> updateRating(@RequestBody RatingDto newRating) {
         Optional<RatingDto> updateRating = Optional.empty();
         try {
@@ -41,6 +51,13 @@ public class RatingRestController {
             System.err.println(e);
         }
         return new ResponseEntity<RatingDto>(updateRating.get(), HttpStatus.OK);
+    }
+    
+    @PreAuthorize("hasAnyRole('PLAYER', 'MANAGER')")
+    @PostMapping("/create")
+    public ResponseEntity<RatingDto> createRating(@RequestBody RatingDto newRating) {
+        ratingService.createRating(newRating);
+        return new ResponseEntity<RatingDto>(newRating, HttpStatus.OK);
     }
 
 }
