@@ -22,44 +22,43 @@ import com.gl.eugene.demo.rest.service.RatingRestService;
 @RequestMapping("/")
 public class RatingRestController {
 
-    public RatingRestService ratingService;
-    public ObjectMapper objectMapper;
+  public RatingRestService ratingService;
+  public ObjectMapper objectMapper;
 
-    public RatingRestController(RatingRestService ratingService, ObjectMapper objectMapper) {
-        this.ratingService = ratingService;
-        this.objectMapper = objectMapper;
-    }
+  public RatingRestController(RatingRestService ratingService, ObjectMapper objectMapper) {
+    this.ratingService = ratingService;
+    this.objectMapper = objectMapper;
+  }
 
-    @GetMapping("/healthcheck")
-    @CrossOrigin
-    public ResponseEntity<String> healthcheck() {
-        return new ResponseEntity<String>("OK", HttpStatus.OK);
-    }
+  @GetMapping("/healthcheck")
+  public ResponseEntity<String> healthcheck() {
+    return new ResponseEntity<String>("OK", HttpStatus.OK);
+  }
 
-    @GetMapping("/rating")
-    @PreAuthorize("hasAnyRole('PLAYER', 'MANAGER')")
-    public ResponseEntity<RatingDto> getRating(@RequestParam String playerId) {
-        Optional<RatingDto> ratingOptional = ratingService.getRating(playerId);
-        return new ResponseEntity<RatingDto>(ratingOptional.get(), HttpStatus.OK);
-    }
+  @GetMapping("/rating")
+  @PreAuthorize("hasAnyRole('PLAYER', 'MANAGER')")
+  public ResponseEntity<RatingDto> getRating(@RequestParam String playerId) {
+    Optional<RatingDto> ratingOptional = ratingService.getRating(playerId);
+    return new ResponseEntity<RatingDto>(ratingOptional.get(), HttpStatus.OK);
+  }
 
-    @PutMapping("/update")
-    @PreAuthorize("hasAnyRole('PLAYER', 'MANAGER')")
-    public ResponseEntity<RatingDto> updateRating(@RequestBody RatingDto newRating) {
-        Optional<RatingDto> updateRating = Optional.empty();
-        try {
-            updateRating = ratingService.updateRating(newRating);
-        } catch (Exception e) {
-            System.err.println(e);
-        }
-        return new ResponseEntity<RatingDto>(updateRating.get(), HttpStatus.OK);
+  @PutMapping("/update")
+  @PreAuthorize("hasAnyRole('PLAYER', 'MANAGER')")
+  public ResponseEntity<RatingDto> updateRating(@RequestBody RatingDto newRating) {
+    Optional<RatingDto> updateRating = Optional.empty();
+    try {
+      updateRating = ratingService.updateRating(newRating);
+    } catch (Exception e) {
+      System.err.println(e);
     }
-    
-    @PreAuthorize("hasAnyRole('PLAYER', 'MANAGER')")
-    @PostMapping("/create")
-    public ResponseEntity<RatingDto> createRating(@RequestBody RatingDto newRating) {
-        ratingService.createRating(newRating);
-        return new ResponseEntity<RatingDto>(newRating, HttpStatus.OK);
-    }
+    return new ResponseEntity<RatingDto>(updateRating.get(), HttpStatus.OK);
+  }
+
+  @PreAuthorize("hasAnyRole('PLAYER', 'MANAGER')")
+  @PostMapping("/create")
+  public ResponseEntity<RatingDto> createRating(@RequestBody RatingDto newRating) {
+    ratingService.createRating(newRating);
+    return new ResponseEntity<RatingDto>(newRating, HttpStatus.OK);
+  }
 
 }
